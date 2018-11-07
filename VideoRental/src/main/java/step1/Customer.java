@@ -20,23 +20,19 @@ class Customer {
 	};
 
 	public String statement() {
-		String result = statementHeader();
-
-		result = statementBody(result);
-
-		result = statementTail(result);
-
-		return result;
+		return statementHeader()
+			   + statementBody()
+			   + statementTail();
 	}
 
-	private String statementTail(String result) {
-		result += "Amount owed is " + String.valueOf(getTotalAmount()) + "\n";
+	private String statementTail() {
+		String result = "Amount owed is " + String.valueOf(getTotalAmount()) + "\n";
 		result += "You earned " + String.valueOf(getFrequentRenterPoints()) + " frequent renter pointers";
 		return result;
 	}
 
-	private String statementBody(String result) {
-		result = getRentaLines(result);
+	private String statementBody() {
+		String result = getRentaLines();
 		return result;
 	}
 
@@ -52,7 +48,8 @@ class Customer {
 		return totalAmount;
 	}
 
-	private String getRentaLines(String result) {
+	private String getRentaLines() {
+		String result = "";
 		for ( Rental each : rentals ) {
 			result += showRentalLines(each, each.amountFor());
 		}
