@@ -13,7 +13,7 @@ public class CustomerTest {
     Customer customer = new Customer(name);
 
     @Test
-    public void statement_should_X() {
+    public void statement_for_noRental() {
 
         // Act - When - Test
         String statement = customer.statement();
@@ -25,7 +25,7 @@ public class CustomerTest {
     }
 
     @Test
-    public void statement_should_Y_regularMovie() {
+    public void statement_for_regularMovie_when_rents_less_than_3_days() {
         customer.addRental(createRentalFor(TWO_DAYS));
 
         String statement = customer.statement();
@@ -37,7 +37,7 @@ public class CustomerTest {
     }
 
     @Test
-    public void statement_should_Y_regularMovie_daysRented_is_larger_than_2_days() {
+    public void statement_for_regularMovie_daysRented_is_larger_than_2_days() {
         customer.addRental(createRentalFor(THREE_DAYS));
 
         String statement = customer.statement();
@@ -48,9 +48,84 @@ public class CustomerTest {
                 "You earned 1 frequent renter pointers", statement);
     }
 
+    @Test
+    public void statement_for_newReleaseMovie_() {
+        customer.addRental(createRentalFor(Movie.NEW_RELEASE, TWO_DAYS));
+
+        String statement = customer.statement();
+
+        assertEquals("Rental Record for null\n" +
+                "\t6.0(null)\n" +
+                "Amount owed is 6.0\n" +
+                "You earned 2 frequent renter pointers", statement);
+    }
+
+    @Test
+    public void statement_for_newReleaseMovie_when_rents_less_than_2_days() {
+        customer.addRental(createRentalFor(Movie.NEW_RELEASE, 1));
+
+        String statement = customer.statement();
+
+        assertEquals("Rental Record for null\n" +
+                "\t3.0(null)\n" +
+                "Amount owed is 3.0\n" +
+                "You earned 1 frequent renter pointers", statement);
+    }
+
+    @Test
+    public void statement_for_childrensMovie_when_rents_less_than_4_days() {
+        customer.addRental(createRentalFor(Movie.CHILDRENS, 3));
+
+        String statement = customer.statement();
+
+        assertEquals("Rental Record for null\n" +
+                "\t1.5(null)\n" +
+                "Amount owed is 1.5\n" +
+                "You earned 1 frequent renter pointers", statement);
+    }
+
+    @Test
+    public void statement_for_childrensMovie_when_rents_more_than_3_days() {
+        customer.addRental(createRentalFor(Movie.CHILDRENS, 4));
+
+        String statement = customer.statement();
+
+        assertEquals("Rental Record for null\n" +
+                "\t3.0(null)\n" +
+                "Amount owed is 3.0\n" +
+                "You earned 1 frequent renter pointers", statement);
+    }
+
+    @Test
+    public void statement_for_several_movies() {
+        customer.addRental(createRentalFor(Movie.REGULAR, TWO_DAYS));
+        customer.addRental(createRentalFor(Movie.REGULAR, THREE_DAYS));
+
+        customer.addRental(createRentalFor(Movie.NEW_RELEASE, 1));
+        customer.addRental(createRentalFor(Movie.NEW_RELEASE, TWO_DAYS));
+
+        customer.addRental(createRentalFor(Movie.CHILDRENS, 3));
+        customer.addRental(createRentalFor(Movie.CHILDRENS, 4));
+
+        String statement = customer.statement();
+
+        assertEquals("Rental Record for null\n" +
+                "\t2.0(null)\n" +
+                "\t3.5(null)\n" +
+                "\t3.0(null)\n" +
+                "\t6.0(null)\n" +
+                "\t1.5(null)\n" +
+                "\t3.0(null)\n" +
+                "Amount owed is 19.0\n" +
+                "You earned 7 frequent renter pointers", statement);
+    }
+
     private Rental createRentalFor(int daysRented) {
+        return createRentalFor(Movie.REGULAR, daysRented);
+    }
+
+    private Rental createRentalFor(int priceCode, int daysRented) {
         String title = null;
-        int priceCode = Movie.REGULAR;
         Movie movie = new Movie(title, priceCode);
         return new Rental(movie, daysRented);
     }
