@@ -32,8 +32,7 @@ class Customer {
 	}
 
 	private String statementBody() {
-		String result = getRentaLines();
-		return result;
+		return getRentaLines();
 	}
 
 	private String statementHeader() {

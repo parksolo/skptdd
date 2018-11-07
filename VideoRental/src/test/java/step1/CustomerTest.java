@@ -128,7 +128,14 @@ public class CustomerTest {
 
     private Rental createRentalFor(int priceCode, int daysRented) {
         String title = "TITLE_NOT_IMPORTANT";
-        Movie movie = new Movie(title, priceCode);
+        Movie movie = createMovie(priceCode, title);
         return new Rental(movie, daysRented);
+    }
+
+    private Movie createMovie(int priceCode, String title) {
+        if ( priceCode == Movie.REGULAR )
+            return new RegularMovie(title);
+
+        return new Movie(title, priceCode);
     }
 }
